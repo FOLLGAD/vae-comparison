@@ -1,0 +1,6 @@
+einops
+matplotlib
+datasets
+numpy
+pillow
+torch

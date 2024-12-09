@@ -2,7 +2,6 @@ import torch
 from data import CIFAR10Dataset
 from torch.utils.data import DataLoader
 from vae import VAE
-import numpy as np
 from einops import rearrange
 import matplotlib.pyplot as plt
 
