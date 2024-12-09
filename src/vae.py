@@ -7,18 +7,19 @@ class VAE(nn.Module):
     def __init__(self, input_shape, in_channels, latent_dim=16):
         super(VAE, self).__init__()
 
+        size = 32
         self.encoder = nn.Sequential(
-            nn.Conv2d(in_channels, 32, kernel_size=4, stride=2, padding=1),
-            nn.BatchNorm2d(32),
+            nn.Conv2d(in_channels, size, kernel_size=3, stride=2, padding=1),
+            nn.BatchNorm2d(size),
             nn.ReLU(),
-            nn.Conv2d(32, 64, kernel_size=4, stride=2, padding=1),
-            nn.BatchNorm2d(64),
+            nn.Conv2d(size, size * 2, kernel_size=3, stride=2, padding=1),
+            nn.BatchNorm2d(size * 2),
             nn.ReLU(),
-            nn.Conv2d(64, 128, kernel_size=4, stride=2, padding=1),
-            nn.BatchNorm2d(128),
+            nn.Conv2d(size * 2, size * 4, kernel_size=3, stride=2, padding=1),
+            nn.BatchNorm2d(size * 4),
             nn.ReLU(),
-            nn.Conv2d(128, 256, kernel_size=4, stride=2, padding=1),
-            nn.BatchNorm2d(256),
+            nn.Conv2d(size * 4, size * 8, kernel_size=3, stride=2, padding=1),
+            nn.BatchNorm2d(size * 8),
             nn.ReLU(),
             nn.Flatten(),
         )
@@ -31,14 +32,14 @@ class VAE(nn.Module):
         self.predecode = nn.Linear(latent_dim, conv_out_size)
 
         self.decoder = nn.Sequential(
-            nn.Unflatten(1, (256, input_shape[1] // 16, input_shape[2] // 16)),
-            nn.ConvTranspose2d(256, 128, kernel_size=4, stride=2, padding=1),
+            nn.Unflatten(1, (size * 8, input_shape[1] // 16, input_shape[2] // 16)),
+            nn.ConvTranspose2d(size * 8, size * 4, kernel_size=4, stride=2, padding=1),
             nn.ReLU(),
-            nn.ConvTranspose2d(128, 64, kernel_size=4, stride=2, padding=1),
+            nn.ConvTranspose2d(size * 4, size * 2, kernel_size=4, stride=2, padding=1),
             nn.ReLU(),
-            nn.ConvTranspose2d(64, 32, kernel_size=4, stride=2, padding=1),
+            nn.ConvTranspose2d(size * 2, size, kernel_size=4, stride=2, padding=1),
             nn.ReLU(),
-            nn.ConvTranspose2d(32, in_channels, kernel_size=4, stride=2, padding=1),
+            nn.ConvTranspose2d(size, in_channels, kernel_size=4, stride=2, padding=1),
             nn.Sigmoid(),
         )
 

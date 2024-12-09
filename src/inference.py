@@ -4,6 +4,7 @@ from torch.utils.data import DataLoader
 from vae import VAE
 from einops import rearrange
 import matplotlib.pyplot as plt
+import sys
 
 ENABLE_MPS = False
 device = (
@@ -15,11 +16,15 @@ device = (
 )
 
 # Load the trained VAE model
-vae = VAE(in_channels=3, input_shape=(3, 32, 32))
+vae = VAE(in_channels=3, input_shape=(3, 32, 32), latent_dim=64)
 vae.to(device)
 vae.eval()
 
-checkpoint_path = "checkpoints/vae_epoch_9.pth"
+
+if len(sys.argv) < 2:
+    raise ValueError("Please provide the checkpoint path as a command-line argument.")
+
+checkpoint_path = sys.argv[1]
 vae.load_state_dict(torch.load(checkpoint_path, map_location=device))
 
 
