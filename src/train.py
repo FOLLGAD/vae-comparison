@@ -53,7 +53,7 @@ for epoch in range(10):
             loss = recon_loss + kl_loss * β
             total_loss += loss.item()
 
-            vae.zero_grad()
+            optimizer.zero_grad()
             loss.backward()
             optimizer.step()
 

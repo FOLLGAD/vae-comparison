@@ -1,0 +1,6 @@
+todo:
+
+check out how opensora does it:
+they use https://huggingface.co/stabilityai/sdxl-vae/discussions
+
+Conv2d? or something else?

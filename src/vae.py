@@ -9,17 +9,14 @@ class VAE(nn.Module):
 
         size = 32
         self.encoder = nn.Sequential(
-            nn.Conv2d(in_channels, size, kernel_size=3, stride=2, padding=1),
+            nn.Conv2d(in_channels, size, kernel_size=4, stride=2),
             nn.BatchNorm2d(size),
             nn.ReLU(),
-            nn.Conv2d(size, size * 2, kernel_size=3, stride=2, padding=1),
+            nn.Conv2d(size, size * 2, kernel_size=4, stride=2),
             nn.BatchNorm2d(size * 2),
             nn.ReLU(),
-            nn.Conv2d(size * 2, size * 4, kernel_size=3, stride=2, padding=1),
+            nn.Conv2d(size * 2, size * 4, kernel_size=4, stride=2),
             nn.BatchNorm2d(size * 4),
-            nn.ReLU(),
-            nn.Conv2d(size * 4, size * 8, kernel_size=3, stride=2, padding=1),
-            nn.BatchNorm2d(size * 8),
             nn.ReLU(),
             nn.Flatten(),
         )
@@ -32,14 +29,12 @@ class VAE(nn.Module):
         self.predecode = nn.Linear(latent_dim, conv_out_size)
 
         self.decoder = nn.Sequential(
-            nn.Unflatten(1, (size * 8, input_shape[1] // 16, input_shape[2] // 16)),
-            nn.ConvTranspose2d(size * 8, size * 4, kernel_size=4, stride=2, padding=1),
+            nn.Unflatten(1, (size * 4, input_shape[1] // 16, input_shape[2] // 16)),
+            nn.ConvTranspose2d(size * 4, size * 2, kernel_size=4, stride=2),
             nn.ReLU(),
-            nn.ConvTranspose2d(size * 4, size * 2, kernel_size=4, stride=2, padding=1),
+            nn.ConvTranspose2d(size * 2, size, kernel_size=4, stride=2),
             nn.ReLU(),
-            nn.ConvTranspose2d(size * 2, size, kernel_size=4, stride=2, padding=1),
-            nn.ReLU(),
-            nn.ConvTranspose2d(size, in_channels, kernel_size=4, stride=2, padding=1),
+            nn.ConvTranspose2d(size, in_channels, kernel_size=4, stride=2),
             nn.Sigmoid(),
         )
 
